@@ -1,7 +1,7 @@
 #include <cmath>
 #include <algorithm>
 #include "triangle.h"
-extern int choice;
+
 double distance(const Point &p1, const Point &p2) {
     return sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2));
 }
@@ -23,13 +23,13 @@ double cross_product(const Point &p1, const Point &p2, const Point &p3) {
 }
 
 double Triangle::area() const {
-    return (choice == 1) ? heronArea(*this) : gaussArea(*this);
+    return (method == 1) ? heronArea(*this) : gaussArea(*this);
 }
 
 bool Triangle::contains(const Point &P) const {
     if (degenerate()) return false;
 
-    if (choice == 1) {
+    if (method == 1) {
         double S1 = heronArea({A, B, P});
         double S2 = heronArea({B, C, P});
         double S3 = heronArea({C, A, P});
@@ -54,5 +54,4 @@ bool Triangle::on_border(const Point &P) const {
 bool Triangle::degenerate() const {
     return area() < 1e-9;
 }
-
 
