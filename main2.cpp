@@ -1,21 +1,24 @@
+#include <iostream>
+#include <vector>
 #include "triangle.h"
 
-int choice = 1;
+using namespace std;
 
 int main() {
     Triangle t;
     cout << "Enter the coordinates of the triangle (x1 y1 x2 y2 x3 y3): ";
     cin >> t.A.x >> t.A.y >> t.B.x >> t.B.y >> t.C.x >> t.C.y;
-    cout << "Choose a verification method:\n1 Heron\n2 vector product\nEnter method number: ";
-    cin >> choice;
 
-    if (choice == 1) {
+    cout << "Choose a verification method:\n1 Heron\n2 vector product\nEnter method number: ";
+    cin >> t.method;
+
+    if (t.method == 1) {
         cout << "Heron's method selected\n";
-    } else if (choice == 2) {
+    } else if (t.method == 2) {
         cout << "The vector product method is selected.\n";
     } else {
         cout << "Wrong choice, automatically used Heron\n";
-        choice = 1;
+        t.method = 1;
     }
 
     if (t.degenerate()) {
