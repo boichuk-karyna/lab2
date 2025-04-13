@@ -7,6 +7,8 @@ struct Point {
 
 struct Triangle {
     Point A, B, C;
+    int method = 1;
+
     double area() const;
     bool contains(const Point &P) const;
     bool on_border(const Point &P) const;
