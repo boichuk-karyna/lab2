@@ -1,55 +1,50 @@
-#include <iostream>
 #include "triangle.h"
-#include <cmath>
+
+int choice = 1;
 
 int main() {
     Triangle t;
-    Point points[3];
-    std::cout << "Enter the coordinates of the triangle (x y) for points A, B, C:\n";
-    std::cin >> t.A.x >> t.A.y >> t.B.x >> t.B.y >> t.C.x >> t.C.y;
-    if (t.isDegenerate()) {
-        std::cout << "The triangle is degenerate!\n";
+    cout << "Enter the coordinates of the triangle (x1 y1 x2 y2 x3 y3): ";
+    cin >> t.A.x >> t.A.y >> t.B.x >> t.B.y >> t.C.x >> t.C.y;
+    cout << "Choose a verification method:\n1 Heron\n2 vector product\nEnter method number: ";
+    cin >> choice;
+
+    if (choice == 1) {
+        cout << "Heron's method selected\n";
+    } else if (choice == 2) {
+        cout << "The vector product method is selected.\n";
     } else {
-        std::cout << "The triangle is not degenerate!\n";
+        cout << "Wrong choice, automatically used Heron\n";
+        choice = 1;
+    }
+
+    if (t.degenerate()) {
+        cout << "Degenerate triangle \n";
     }
 
     int n;
-    std::cout << "Enter the number of points to check:\n";
-    std::cin >> n;
+    cout << "How many points need to be checked? ";
+    cin >> n;
 
-    if (n <= 0) {
-        std::cout << "There are no points. Please try again.\n";
-        return 0;
-    }
-    std::cout << "Enter the coordinates of " << n << " points:\n";
-    for (int i = 0; i < n; ++i) {
-        std::cin >> points[i].x >> points[i].y;
+    while (n < 0 || n > 100) {
+        cout << "Incorrect quantity. number from 0 to 100: ";
+        cin >> n;
     }
 
-    int method;
-    std::cout << "Choose the method (1 - Heron, 2 - Vector):";
-    std::cin >> method;
-
+    vector<Point> points(n);
     for (int i = 0; i < n; ++i) {
-        bool result;
-        if (method == 1) {
-            result = t.contains(points[i]); 
-        } else {
-            result = t.containsUsingCrossProduct(points[i]); 
-        }
+        cout << "Point coordinates " << i + 1 << " (x y): ";
+        cin >> points[i].x >> points[i].y;
 
-        if (result) {
-            if (std::fabs(t.area() - (Triangle{t.A, t.B, points[i]}).area()) < 1e-9 || 
-                std::fabs(t.area() - (Triangle{t.B, t.C, points[i]}).area()) < 1e-9 || 
-                std::fabs(t.area() - (Triangle{t.C, t.A, points[i]}).area()) < 1e-9) {
-                std::cout << "Point " << i + 1 << ": lies on the boundary of the triangle.\n";
-            } else {
-                std::cout << "Point " << i + 1 << ": lies inside the triangle.\n";
-            }
+        if (t.on_border(points[i])) {
+            cout << "The point lies on the boundary of the triangle.\n";
+        } else if (t.contains(points[i])) {
+            cout << "A point inside a triangle.\n";
         } else {
-            std::cout << "Point" << i + 1 << ": does not lie inside the triangle.\n";
+            cout << "Point outside the triangle.\n";
         }
     }
+
+    return 0;
 }
-
 
