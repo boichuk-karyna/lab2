@@ -26,29 +26,40 @@ double Triangle::area() const {
     return (method == 1) ? heronArea(*this) : gaussArea(*this);
 }
 
+bool Triangle::on_border(const Point &P) const {
+    auto on_edge = [](Point p1, Point p2, Point p) {
+        double cp = cross_product(p1, p2, p);
+        if (fabs(cp) > 1e-10) return false;  
+
+        double minX = std::min(p1.x, p2.x), maxX = std::max(p1.x, p2.x);
+        double minY = std::min(p1.y, p2.y), maxY = std::max(p1.y, p2.y);
+
+        return (p.x >= minX - 1e-10 && p.x <= maxX + 1e-10 &&
+                p.y >= minY - 1e-10 && p.y <= maxY + 1e-10);
+    };
+    return on_edge(A, B, P) || on_edge(B, C, P) || on_edge(C, A, P);
+}
+
+
 bool Triangle::contains(const Point &P) const {
     if (degenerate()) return false;
 
     if (method == 1) {
+        double S = area();
         double S1 = heronArea({A, B, P});
         double S2 = heronArea({B, C, P});
         double S3 = heronArea({C, A, P});
-        return fabs(area() - (S1 + S2 + S3)) < 1e-9;
+        double sum = S1 + S2 + S3;
+
+        return fabs(S - sum) < 1e-6 && !on_border(P);
     } else {
         double cp1 = cross_product(A, B, P);
         double cp2 = cross_product(B, C, P);
         double cp3 = cross_product(C, A, P);
-        return (cp1 >= 0 && cp2 >= 0 && cp3 >= 0) || (cp1 <= 0 && cp2 <= 0 && cp3 <= 0);
-    }
-}
 
-bool Triangle::on_border(const Point &P) const {
-    auto on_edge = [](Point p1, Point p2, Point p) {
-        return fabs(cross_product(p1, p2, p)) < 1e-9 &&
-               std::min(p1.x, p2.x) <= p.x && p.x <= std::max(p1.x, p2.x) &&
-               std::min(p1.y, p2.y) <= p.y && p.y <= std::max(p1.y, p2.y);
-    };
-    return on_edge(A, B, P) || on_edge(B, C, P) || on_edge(C, A, P);
+        bool same_sign = (cp1 >= 0 && cp2 >= 0 && cp3 >= 0) || (cp1 <= 0 && cp2 <= 0 && cp3 <= 0);
+        return same_sign && !on_border(P);
+    }
 }
 
 bool Triangle::degenerate() const {
