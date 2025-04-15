@@ -39,15 +39,16 @@ int main() {
         cout << "Point coordinates " << i + 1 << " (x y): ";
         cin >> points[i].x >> points[i].y;
 
-        if (t.on_border(points[i])) {
-            cout << "The point lies on the boundary of the triangle.\n";
-        } else if (t.contains(points[i])) {
+        if (t.contains(points[i])) {
             cout << "A point inside a triangle.\n";
+        } else if (t.on_border(points[i])) {
+            cout << "The point lies on the boundary of the triangle.\n";
         } else {
             cout << "Point outside the triangle.\n";
         }
-    }
+    }        
 
     return 0;
 }
+
 
